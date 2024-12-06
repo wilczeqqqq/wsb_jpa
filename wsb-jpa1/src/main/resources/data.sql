@@ -18,14 +18,14 @@ VALUES
  (1, 'Michael', 'Brown', '555-8765', 'michael.brown@gmail.com', 'PAT001', '1985-02-20', 1),
  (2, 'Sarah', 'Davis', '555-4321', 'sarah.davis@yahoo.com', 'PAT002', '1990-07-15', 3);
 
--- Medical Treatment table data
-INSERT INTO MEDICAL_TREATMENT (id, description, type)
-VALUES
- (1, 'Angioplasty', 'SURGERY'),
- (2, 'Skin Biopsy', 'DIAGNOSIS');
-
 -- Visit table data
-INSERT INTO VISIT (id, description, time, doctor_id, patient_id, medical_treatment_id)
+INSERT INTO VISIT (id, description, time, doctor_id, patient_id)
 VALUES
- (1, 'Routine check-up', '2024-12-01 10:00:00', 1, 1, 1),
- (2, 'Skin evaluation', '2024-12-02 14:30:00', 2, 2, 2);
+ (1, 'Routine check-up', '2024-12-01 10:00:00', 1, 1),
+ (2, 'Skin evaluation', '2024-12-02 14:30:00', 2, 2);
+
+-- Medical Treatment table data
+INSERT INTO MEDICAL_TREATMENT (id, description, type, visit_id)
+VALUES
+    (1, 'Angioplasty', 'SURGERY', 1),
+    (2, 'Skin Biopsy', 'DIAGNOSIS', 1);

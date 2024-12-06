@@ -1,7 +1,12 @@
 package com.jpacourse.persistence.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "ADDRESS")
 public class AddressEntity {
@@ -17,71 +22,5 @@ public class AddressEntity {
 	private String addressLine2;
 
 	private String postalCode;
-
-	@OneToOne(
-			mappedBy = "ADDRESS",
-			cascade = CascadeType.ALL)
-	private DoctorEntity doctor;
-
-	@OneToOne(
-			mappedBy = "ADDRESS",
-			cascade = CascadeType.ALL)
-	private PatientEntity patient;
-
-	public DoctorEntity getDoctor() {
-		return doctor;
-	}
-
-	public void setDoctor(DoctorEntity doctor) {
-		this.doctor = doctor;
-	}
-
-	public PatientEntity getPatient() {
-		return patient;
-	}
-
-	public void setPatient(PatientEntity patient) {
-		this.patient = patient;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getAddressLine1() {
-		return addressLine1;
-	}
-
-	public void setAddressLine1(String addressLine1) {
-		this.addressLine1 = addressLine1;
-	}
-
-	public String getAddressLine2() {
-		return addressLine2;
-	}
-
-	public void setAddressLine2(String addressLine2) {
-		this.addressLine2 = addressLine2;
-	}
-
-	public String getPostalCode() {
-		return postalCode;
-	}
-
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
 
 }

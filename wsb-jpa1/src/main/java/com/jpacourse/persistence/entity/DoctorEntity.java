@@ -1,10 +1,15 @@
 package com.jpacourse.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.jpacourse.persistence.enums.Specialization;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "DOCTOR")
 public class DoctorEntity {
@@ -31,92 +36,17 @@ public class DoctorEntity {
 	@Enumerated(EnumType.STRING)
 	private Specialization specialization;
 
-	//Relacja dwustrona z encja Visit
-	@OneToMany(
-			mappedBy = "doctor",
-			cascade = CascadeType.ALL,
+	// One-way relationship with Address from parent entity
+	@OneToOne(cascade = CascadeType.ALL,
 			fetch = FetchType.LAZY,
+			optional = false,
 			orphanRemoval = true)
-	private List<VisitEntity> visits;
-
-	//Relacja jednostronna z encja Address od strony rodzica.
-	@OneToOne(
-			cascade = CascadeType.ALL,
-			fetch = FetchType.LAZY,
-			orphanRemoval = true)
-	@JoinColumn(name = "ADDRESS_ID", nullable = false)
 	private AddressEntity address;
 
-	public List<VisitEntity> getVisits() {
-		return visits;
-	}
-
-	public void setVisits(List<VisitEntity> visits) {
-		this.visits = visits;
-	}
-
-	public AddressEntity getAddress() {
-		return address;
-	}
-
-	public void setAddress(AddressEntity address) {
-		this.address = address;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getTelephoneNumber() {
-		return telephoneNumber;
-	}
-
-	public void setTelephoneNumber(String telephoneNumber) {
-		this.telephoneNumber = telephoneNumber;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getDoctorNumber() {
-		return doctorNumber;
-	}
-
-	public void setDoctorNumber(String doctorNumber) {
-		this.doctorNumber = doctorNumber;
-	}
-
-	public Specialization getSpecialization() {
-		return specialization;
-	}
-
-	public void setSpecialization(Specialization specialization) {
-		this.specialization = specialization;
-	}
+	// Bidirectional relationship with Visit
+	@OneToMany(mappedBy = "doctor",
+			cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, // we don't want to remove doctor when visit is removed
+			fetch = FetchType.LAZY)
+	private List<VisitEntity> visits;
 
 }
