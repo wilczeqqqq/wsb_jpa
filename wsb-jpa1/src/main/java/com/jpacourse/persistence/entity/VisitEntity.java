@@ -1,14 +1,15 @@
 package com.jpacourse.persistence.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "VISIT")
 public class VisitEntity {
@@ -22,28 +23,21 @@ public class VisitEntity {
 	@Column(nullable = false)
 	private LocalDateTime time;
 
-	public Long getId() {
-		return id;
-	}
+	// Bidirectional relationship with Doctor
+	@ManyToOne
+	@JoinColumn(name = "DOCTOR_ID", nullable = false)
+	private DoctorEntity doctor;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+	// Bidirectional relationship with Patient
+	@ManyToOne
+	@JoinColumn(name = "PATIENT_ID", nullable = false)
+	private PatientEntity patient;
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public LocalDateTime getTime() {
-		return time;
-	}
-
-	public void setTime(LocalDateTime time) {
-		this.time = time;
-	}
+	// One-way relationship with MedicalTreatment from parent entity
+	@OneToMany(cascade = CascadeType.ALL,
+			fetch = FetchType.EAGER, // we always want to have treatments when we have visit
+			orphanRemoval = true)
+	@JoinColumn(name = "VISIT_ID", nullable = false)
+	private List<MedicalTreatmentEntity> medicalTreatment;
 
 }

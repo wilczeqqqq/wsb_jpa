@@ -1,14 +1,15 @@
 package com.jpacourse.persistence.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "PATIENT")
 public class PatientEntity {
@@ -34,60 +35,17 @@ public class PatientEntity {
 	@Column(nullable = false)
 	private LocalDate dateOfBirth;
 
-	public Long getId() {
-		return id;
-	}
+	// One-way relationship with Address from parent entity
+	@OneToOne(cascade = CascadeType.ALL,
+			fetch = FetchType.LAZY,
+			optional = false,
+			orphanRemoval = true)
+	private AddressEntity address;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getTelephoneNumber() {
-		return telephoneNumber;
-	}
-
-	public void setTelephoneNumber(String telephoneNumber) {
-		this.telephoneNumber = telephoneNumber;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPatientNumber() {
-		return patientNumber;
-	}
-
-	public void setPatientNumber(String patientNumber) {
-		this.patientNumber = patientNumber;
-	}
-
-	public LocalDate getDateOfBirth() {
-		return dateOfBirth;
-	}
-
-	public void setDateOfBirth(LocalDate dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
+	// Bidirectional relationship with Visit
+	@OneToMany(mappedBy = "patient",
+			fetch = FetchType.LAZY,
+			cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}) // we don't want to remove doctor when visit is removed
+	private List<VisitEntity> visits;
 
 }
