@@ -2,7 +2,7 @@
 -- Address table data
 INSERT INTO ADDRESS (id, city, address_line1, address_line2, postal_code)
 VALUES
- (1, 'New York', '123 Main St', 'Apt 4B', '10001'),
+ (1, 'New York', '123 Main St', 'Apt 4B', '62-030'),
  (2, 'Los Angeles', '456 Sunset Blvd', NULL, '90028'),
  (3, 'Chicago', '789 Lakeshore Dr', NULL, '60611');
 

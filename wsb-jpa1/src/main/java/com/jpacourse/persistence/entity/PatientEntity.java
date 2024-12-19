@@ -57,7 +57,7 @@ public class PatientEntity {
 	// Bidirectional relationship with Visit
 	@OneToMany(mappedBy = "patient",
 			fetch = FetchType.LAZY,
-			cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}) // we don't want to remove doctor when visit is removed
+			cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}) // we don't want to remove doctor when visit is removed
 	private List<VisitEntity> visits;
 
 }
