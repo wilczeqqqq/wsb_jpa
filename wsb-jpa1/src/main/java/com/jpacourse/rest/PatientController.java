@@ -3,6 +3,7 @@ package com.jpacourse.rest;
 import com.jpacourse.dto.PatientTO;
 import com.jpacourse.rest.exception.EntityNotFoundException;
 import com.jpacourse.service.PatientService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,9 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PatientController
 {
-
     private final PatientService patientService;
-
 
     public PatientController(PatientService patientService) {
         this.patientService = patientService;
@@ -27,4 +26,10 @@ public class PatientController
         }
         throw new EntityNotFoundException(id);
     }
+
+    @DeleteMapping("/patients/{id}")
+    void deleteById(@PathVariable final Long id) {
+        patientService.deleteById(id);
+    }
+
 }

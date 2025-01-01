@@ -1,5 +1,7 @@
-package com.jpacourse.persistance.service;
+package com.jpacourse.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jpacourse.dto.PatientTO;
 import com.jpacourse.persistence.dao.DoctorDao;
 import com.jpacourse.persistence.dao.PatientDao;
 import com.jpacourse.persistence.dao.VisitDao;
@@ -12,16 +14,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -29,10 +27,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PatientServiceTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private PatientDao patientDao;
 
     @Autowired
-    private PatientDao patientDao;
+    private PatientService patientService;
 
     @Autowired
     private VisitDao visitDao;
@@ -40,47 +38,43 @@ public class PatientServiceTest {
     @Autowired
     private DoctorDao doctorDao;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Transactional
     @Test
-    public void testShouldRemovePatientAndVisitsButNotDoctors()
-    {
+    public void testShouldRemovePatientAndVisitsButNotDoctors() {
+        //Given: Data before entity deletion
+        final PatientEntity patientEntity = patientDao.findOne(1L);
+        final VisitEntity visitEntity = patientEntity.getVisits().get(0);
 
-        //Given
-        final PatientEntity patientEntity = patientDao.findOne(1L); //Gets patient for given ID.
-        long patientId = patientEntity.getId(); //Save ID of selected patient.
-
-        List<VisitEntity> visits = patientEntity.getVisits(); // Get visits for given patient.
-
-        VisitEntity visitEntity = visits.get(0); // Get for testing purposes first found visit.
-        Long doctorId = visitEntity.getDoctor().getId(); // Get doctor ID assigned to this visit.
+        Long patientId = patientEntity.getId();
         Long visitId = visitEntity.getId();
+        Long doctorId = visitEntity.getDoctor().getId();
 
         // When: Delete the patient by their ID
-        patientDao.delete(patientEntity);
+        patientService.deleteById(patientId);
 
-        // Then
+        // Then: Data after entity deletion
         assertThat(patientDao.findOne(patientId)).isNull(); // Patient is removed
         assertThat(visitDao.findOne(visitId)).isNull();   // Visit is removed
         assertThat(doctorDao.findOne(doctorId)).isNotNull();   // Doctor applied to this visit isn't removed.
-
     }
 
     @Test
-    public void testControllerResponseMatchesJsonFile() throws Exception
+    public void testShouldGetPatientEqualToFormattedJsonObject() throws Exception
     {
-        //Given: Fetching json file from resources folder.
+        //Given: Fetching json file from resources folder and mapping to PatientTO.
         String expectedJson = new String(Files.readAllBytes(
                 Paths.get(new ClassPathResource("patientGetById.json").getURI())));
+        PatientTO expectedDto = objectMapper.readValue(expectedJson, PatientTO.class);
 
-        //When: Mock endpoint call.
-        String actualJson = mockMvc.perform(get("/patients/1"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+        //When: Get the patient by ID.
+        PatientTO actualDto = patientService.findById(1L);
 
         //Then: String comparison.
-        assertThat(actualJson).isEqualToIgnoringWhitespace(expectedJson);
+        assertThat(actualDto).isEqualTo(expectedDto);
+        assertThat(actualDto.isActive()).isEqualTo(expectedDto.isActive()); // For task purposes.
     }
-}
 
+}

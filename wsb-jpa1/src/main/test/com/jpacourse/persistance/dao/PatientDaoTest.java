@@ -1,6 +1,7 @@
 package com.jpacourse.persistance.dao;
 
 import com.jpacourse.persistence.dao.PatientDao;
+import com.jpacourse.persistence.dao.VisitDao;
 import com.jpacourse.persistence.entity.AddressEntity;
 import com.jpacourse.persistence.entity.DoctorEntity;
 import com.jpacourse.persistence.entity.PatientEntity;
@@ -26,6 +27,9 @@ public class PatientDaoTest {
 
     @Autowired
     private PatientDao patientDao;
+
+    @Autowired
+    private VisitDao visitDao;
 
     @Autowired
     private EntityManager entityManager;
@@ -68,15 +72,14 @@ public class PatientDaoTest {
         patientDao.addVisitToPatient(patient.getId(), doctor.getId(), visitDate, description);
 
         //Then
-        PatientEntity newPatient = patientDao.findOne(patient.getId());
-        assertThat(newPatient.getVisits()).hasSize(1);
+        PatientEntity patientAfterAddingVisit = patientDao.findOne(patient.getId());
+        assertThat(patientAfterAddingVisit.getVisits()).hasSize(1);
 
-        VisitEntity addedVisit = newPatient.getVisits().get(0);
+        VisitEntity addedVisit = visitDao.getOne(patientAfterAddingVisit.getVisits().get(0).getId());
         assertThat(addedVisit.getDescription()).isEqualTo(description);
         assertThat(addedVisit.getTime()).isEqualTo(visitDate);
         assertThat(addedVisit.getDoctor().getId()).isEqualTo(doctor.getId());
         assertThat(addedVisit.getPatient().getId()).isEqualTo(patient.getId());
-
     }
 
 }
