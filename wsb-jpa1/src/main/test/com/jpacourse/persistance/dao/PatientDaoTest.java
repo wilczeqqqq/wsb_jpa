@@ -41,6 +41,8 @@ public class PatientDaoTest {
         // Given
         AddressEntity address = new AddressEntity();
         address.setCity("Przytuły");
+        address.setPostalCode("06-212");
+        address.setAddressLine1("ul. Przytuły 49");
         entityManager.persist(address);
 
         PatientEntity patient = new PatientEntity();
@@ -60,6 +62,7 @@ public class PatientDaoTest {
         doctor.setTelephoneNumber("987654321");
         doctor.setDoctorNumber("123");
         doctor.setSpecialization(SURGEON);
+        doctor.setEmail("gregory.house@example.com");
         doctor.setAddress(address);
 
         entityManager.persist(doctor);
