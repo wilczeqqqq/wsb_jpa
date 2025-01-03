@@ -3,10 +3,18 @@ package com.jpacourse.persistence.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.List;
-
-import javax.persistence.*;
 
 @Getter
 @Setter
@@ -27,6 +35,7 @@ public class PatientEntity {
 	@Column(nullable = false)
 	private String telephoneNumber;
 
+	@Column(nullable = false)
 	private String email;
 
 	@Column(nullable = false)
@@ -34,6 +43,9 @@ public class PatientEntity {
 
 	@Column(nullable = false)
 	private LocalDate dateOfBirth;
+
+	@Column(nullable = false)
+	private boolean active = true;
 
 	// One-way relationship with Address from parent entity
 	@OneToOne(cascade = CascadeType.ALL,
@@ -45,7 +57,7 @@ public class PatientEntity {
 	// Bidirectional relationship with Visit
 	@OneToMany(mappedBy = "patient",
 			fetch = FetchType.LAZY,
-			cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}) // we don't want to remove doctor when visit is removed
+			cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}) // we don't want to remove doctor when visit is removed
 	private List<VisitEntity> visits;
 
 }

@@ -1,0 +1,23 @@
+{
+    "id": 1,
+    "firstName": "Michael",
+    "lastName": "Brown",
+    "telephoneNumber": "555-8765",
+    "email": "michael.brown@gmail.com",
+    "patientNumber": "PAT001",
+    "dateOfBirth": "1985-02-20",
+    "active": true,
+    "visits": [
+        {
+            "time": "2024-12-01T10:00:00",
+            "doctor": {
+                "firstName": "John",
+                "lastName": "Smith"
+            },
+            "medicalTreatment": [
+                "USG",
+                "EKG"
+            ]
+        }
+    ]
+}
