@@ -20,25 +20,25 @@ public class PatientDaoImpl extends AbstractDao<PatientEntity, Long> implements 
     @Autowired
     public PatientDaoImpl(DoctorDao pDoctorDao) {doctorDao = pDoctorDao;}
 
-        @Override
-        public void addVisitToPatient(Long patientId, Long doctorId, LocalDateTime visitDate, String description) {
-            PatientEntity patient = findOne(patientId);
-            DoctorEntity doctor = doctorDao.findOne(doctorId);
+    @Override
+    public void addVisitToPatient(Long patientId, Long doctorId, LocalDateTime visitDate, String description) {
+        PatientEntity patient = findOne(patientId);
+        DoctorEntity doctor = doctorDao.findOne(doctorId);
 
-            if (patient == null) {
-                throw new EntityNotFoundException(patientId);
-            } else if (doctor == null) {
-                throw new EntityNotFoundException(doctorId);
-            }
-
-            VisitEntity visit = new VisitEntity();
-            visit.setDoctor(doctor);
-            visit.setPatient(patient);
-            visit.setDescription(description);
-            visit.setTime(visitDate);
-
-            patient.getVisits().add(visit);
-            update(patient);
+        if (patient == null) {
+            throw new EntityNotFoundException(patientId);
+        } else if (doctor == null) {
+            throw new EntityNotFoundException(doctorId);
         }
+
+        VisitEntity visit = new VisitEntity();
+        visit.setDoctor(doctor);
+        visit.setPatient(patient);
+        visit.setDescription(description);
+        visit.setTime(visitDate);
+
+        patient.getVisits().add(visit);
+        update(patient);
     }
+}
 

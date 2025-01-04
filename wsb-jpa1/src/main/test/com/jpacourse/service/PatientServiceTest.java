@@ -46,6 +46,7 @@ public class PatientServiceTest {
     public void testShouldRemovePatientAndVisitsButNotDoctors() {
         //Given: Data before entity deletion
         final PatientEntity patientEntity = patientDao.findOne(1L);
+        assertThat(patientEntity.getVisits()).hasSize(1);
         final VisitEntity visitEntity = patientEntity.getVisits().get(0);
 
         Long patientId = patientEntity.getId();
