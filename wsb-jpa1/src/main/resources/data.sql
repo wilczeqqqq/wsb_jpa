@@ -16,7 +16,8 @@ VALUES
 INSERT INTO PATIENT (id, first_name, last_name, telephone_number, email, patient_number, date_of_birth, address_id, active)
 VALUES
  (1, 'Michael', 'Brown', '555-8765', 'michael.brown@gmail.com', 'PAT001', '1985-02-20', 1, true),
- (2, 'Sarah', 'Davis', '555-4321', 'sarah.davis@yahoo.com', 'PAT002', '1990-07-15', 3, true);
+ (2, 'Sarah', 'Davis', '555-4321', 'sarah.davis@yahoo.com', 'PAT002', '1990-07-15', 3, true),
+ (3, 'James', 'Wilson', '555-9876', 'james.wilson@email.com', 'PAT003', '1975-11-30', 2, true);
 
 -- Visit table data
 INSERT INTO VISIT (id, description, time, doctor_id, patient_id)

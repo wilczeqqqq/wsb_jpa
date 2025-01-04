@@ -1,8 +1,8 @@
 package com.jpacourse.persistance.dao;
 
+import com.jpacourse.persistence.dao.DoctorDao;
 import com.jpacourse.persistence.dao.PatientDao;
 import com.jpacourse.persistence.dao.VisitDao;
-import com.jpacourse.persistence.entity.AddressEntity;
 import com.jpacourse.persistence.entity.DoctorEntity;
 import com.jpacourse.persistence.entity.PatientEntity;
 import com.jpacourse.persistence.entity.VisitEntity;
@@ -12,13 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
-import static com.jpacourse.persistence.enums.Specialization.SURGEON;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -29,47 +25,22 @@ public class PatientDaoTest {
     private PatientDao patientDao;
 
     @Autowired
-    private VisitDao visitDao;
+    private DoctorDao doctorDao;
 
     @Autowired
-    private EntityManager entityManager;
+    private VisitDao visitDao;
 
     @Test
     @Transactional
     public void testAddVisitToPatient(){
 
         // Given
-        AddressEntity address = new AddressEntity();
-        address.setCity("Przytuły");
-        address.setPostalCode("06-212");
-        address.setAddressLine1("ul. Przytuły 49");
-        entityManager.persist(address);
-
-        PatientEntity patient = new PatientEntity();
-        patient.setFirstName("Jakub");
-        patient.setLastName("Tuna");
-        patient.setTelephoneNumber("123456789");
-        patient.setEmail("tunaboi@example.com");
-        patient.setPatientNumber("123");
-        patient.setDateOfBirth(LocalDate.of(2001, 1, 3));
-        patient.setActive(true);
-        patient.setVisits(new ArrayList<>());
-        patient.setAddress(address);
-
-        DoctorEntity doctor = new DoctorEntity();
-        doctor.setFirstName("Gregory");
-        doctor.setLastName("House");
-        doctor.setTelephoneNumber("987654321");
-        doctor.setDoctorNumber("123");
-        doctor.setSpecialization(SURGEON);
-        doctor.setEmail("gregory.house@example.com");
-        doctor.setAddress(address);
-
-        entityManager.persist(doctor);
-        entityManager.persist(patient);
-
+        PatientEntity patient = patientDao.findOne(3L);
+        DoctorEntity doctor = doctorDao.findOne(1L);
         LocalDateTime visitDate = LocalDateTime.now();
         String description = "Routine Checkup";
+
+        assertThat(patient.getVisits()).isEmpty();
 
         //When
         patientDao.addVisitToPatient(patient.getId(), doctor.getId(), visitDate, description);
@@ -78,7 +49,7 @@ public class PatientDaoTest {
         PatientEntity patientAfterAddingVisit = patientDao.findOne(patient.getId());
         assertThat(patientAfterAddingVisit.getVisits()).hasSize(1);
 
-        VisitEntity addedVisit = visitDao.getOne(patientAfterAddingVisit.getVisits().get(0).getId());
+        VisitEntity addedVisit = visitDao.findOne(patientAfterAddingVisit.getVisits().get(0).getId());
         assertThat(addedVisit.getDescription()).isEqualTo(description);
         assertThat(addedVisit.getTime()).isEqualTo(visitDate);
         assertThat(addedVisit.getDoctor().getId()).isEqualTo(doctor.getId());
