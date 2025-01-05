@@ -78,4 +78,16 @@ public class PatientServiceTest {
         assertThat(actualDto.isActive()).isEqualTo(expectedDto.isActive()); // For task purposes.
     }
 
+    public void testFindVisitsByPatientId(){
+
+        //Given
+
+        Long patientId = 1L;
+
+        //When
+
+
+
+
+    }
 }
