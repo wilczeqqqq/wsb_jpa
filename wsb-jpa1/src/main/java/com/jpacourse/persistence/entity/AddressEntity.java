@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 @Getter
 @Setter
@@ -31,5 +32,8 @@ public class AddressEntity {
 
 	@Column(nullable = false)
 	private String postalCode;
+
+	@Version
+	private int version;
 
 }

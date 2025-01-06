@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -54,6 +55,50 @@ public class PatientDaoTest {
         assertThat(addedVisit.getTime()).isEqualTo(visitDate);
         assertThat(addedVisit.getDoctor().getId()).isEqualTo(doctor.getId());
         assertThat(addedVisit.getPatient().getId()).isEqualTo(patient.getId());
+    }
+
+    @Test
+    public void testFindBySurname() {
+        // Given
+        String surname = "Brown";
+
+        // When
+        List<PatientEntity> patients = patientDao.findBySurname(surname);
+
+        // Then
+        assertThat(patients).isNotEmpty();
+        assertThat(patients).allMatch(patient -> surname.equals(patient.getLastName()));
+    }
+
+
+    @Test
+    @Transactional
+    public void testFindPatientsWithMoreThanXVisits(){
+
+        //Given
+        long visits = 1L;
+
+        //When
+        List<PatientEntity> patients = patientDao.findPatientsWithMoreThanXVisits(visits);
+
+        //Then
+        assertThat(patients).isNotEmpty();
+        assertThat(patients).allMatch(patient -> patient.getVisits().size() > visits);
+
+    }
+
+    @Test
+    public void testFindPatientsByActiveStatus(){
+
+        //Given
+        boolean active = true;
+
+        //When
+        List<PatientEntity> patients = patientDao.findPatientsByActiveStatus(active);
+
+        //Then
+        assertThat(patients).isNotEmpty();
+        assertThat(patients).allMatch(patient -> patient.isActive() == active);
     }
 
 }
