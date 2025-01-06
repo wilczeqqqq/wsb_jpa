@@ -26,7 +26,8 @@ INSERT INTO VISIT (id, description, time, doctor_id, patient_id)
 VALUES
  (1, 'Routine check-up', '2024-12-01 10:00:00', 1, 1),
  (2, 'Skin evaluation', '2024-12-02 14:30:00', 2, 2),
- (3, 'Routine check-up', '2024-10-01 10:00:00', 1, 1);
+ (3, 'Routine check-up', '2024-10-01 10:00:00', 2, 4),
+ (4, 'Skin evaluation', '2024-10-01 12:00:00', 2, 4);
 
 -- Medical Treatment table data
 INSERT INTO MEDICAL_TREATMENT (id, description, type, visit_id)
