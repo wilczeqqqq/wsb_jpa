@@ -58,7 +58,6 @@ public class PatientDaoTest {
     }
 
     @Test
-    @Transactional
     public void testFindBySurname() {
         // Given
         String surname = "Brown";
@@ -89,7 +88,6 @@ public class PatientDaoTest {
     }
 
     @Test
-    @Transactional
     public void testFindPatientsByActiveStatus(){
 
         //Given

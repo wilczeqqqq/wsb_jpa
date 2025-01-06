@@ -13,9 +13,8 @@ public interface PatientDao extends Dao<PatientEntity, Long>
 
     List<PatientEntity> findBySurname(String surname);
 
+    @Transactional
     List<PatientEntity> findPatientsWithMoreThanXVisits(Long visits);
 
     List<PatientEntity> findPatientsByActiveStatus(boolean status);
-
-    PatientEntity findVisitsForPatientId(Long patientId);
 }

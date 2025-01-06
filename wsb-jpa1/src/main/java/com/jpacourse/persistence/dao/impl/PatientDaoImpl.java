@@ -42,12 +42,14 @@ public class PatientDaoImpl extends AbstractDao<PatientEntity, Long> implements 
         update(patient);
     }
 
+    @Override
     public List<PatientEntity> findBySurname(String surname) {
         return entityManager.createQuery("SELECT p FROM PatientEntity p WHERE p.lastName = :surname", PatientEntity.class)
                 .setParameter("surname", surname)
                 .getResultList();
     }
 
+    @Override
     public List<PatientEntity> findPatientsWithMoreThanXVisits(Long visits) {
         return entityManager.createQuery("SELECT p FROM PatientEntity p " +
                                             "JOIN p.visits v " +
@@ -57,20 +59,11 @@ public class PatientDaoImpl extends AbstractDao<PatientEntity, Long> implements 
                 .getResultList();
     }
 
+    // No other way for boolean variable...
+    @Override
     public List<PatientEntity> findPatientsByActiveStatus(boolean status) {
         return entityManager.createQuery("SELECT p FROM PatientEntity p WHERE p.active = :status", PatientEntity.class)
                 .setParameter("status", status)
                 .getResultList();
     }
-
-    public PatientEntity findVisitsForPatientId(Long patientId) {
-        return entityManager.createQuery("SELECT p.visits FROM PatientEntity p " +
-                                            "JOIN p.visits v " +
-                                            "WHERE p.id = :patientId", PatientEntity.class)
-                .setParameter("patientId", patientId)
-                .getSingleResult();
-    }
-
-
 }
-
