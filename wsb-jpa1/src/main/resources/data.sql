@@ -1,11 +1,11 @@
 
 -- Address table data
-INSERT INTO ADDRESS (id, city, address_line1, address_line2, postal_code)
+INSERT INTO ADDRESS (id, city, address_line1, address_line2, postal_code, version)
 VALUES
- (1, 'New York', '123 Main St', 'Apt 4B', '62-030'),
- (2, 'Los Angeles', '456 Sunset Blvd', NULL, '90028'),
- (3, 'Chicago', '789 Lakeshore Dr', NULL, '60611'),
- (4, 'San Francisco', '231 Valley', NULL, '10211');
+ (1, 'New York', '123 Main St', 'Apt 4B', '62-030', 0),
+ (2, 'Los Angeles', '456 Sunset Blvd', NULL, '90028', 0),
+ (3, 'Chicago', '789 Lakeshore Dr', NULL, '60611', 0),
+ (4, 'San Francisco', '231 Valley', NULL, '10211', 0);
 
 -- Doctor table data
 INSERT INTO DOCTOR (id, first_name, last_name, telephone_number, email, doctor_number, specialization, address_id)

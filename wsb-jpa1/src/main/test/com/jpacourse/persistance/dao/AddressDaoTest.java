@@ -6,10 +6,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -71,5 +74,23 @@ public class AddressDaoTest
         assertThat(removed).isNull();
     }
 
+    @Test
+    public void testShouldThrowOptimisticLockingExceptionWhenConcurrentUpdate() {
+        // given
+        AddressEntity addressEntityV1 = addressDao.findOne(1L);
+        AddressEntity addressEntityV2 = addressDao.findOne(1L);
 
+        addressEntityV1.setCity("City1");
+        addressEntityV2.setCity("City2");
+
+        // when, then
+        assertThatCode(() -> addressDao.update(addressEntityV1)).doesNotThrowAnyException();
+        AddressEntity addressEntityV1Updated = addressDao.findOne(1L);
+        assertThat(addressEntityV1Updated.getCity()).isEqualTo("City1");
+        assertThat(addressEntityV1Updated.getVersion()).isEqualTo(addressEntityV1.getVersion() + 1);
+
+        assertThatThrownBy(() -> addressDao.update(addressEntityV2))
+                .isInstanceOf(ObjectOptimisticLockingFailureException.class);
+        assertThat(addressDao.findOne(1L).getCity()).isEqualTo("City1");
+    }
 }
